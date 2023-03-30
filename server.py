@@ -514,21 +514,11 @@ def create_interface():
     else:
         shared.gradio['interface'].launch(prevent_thread_lock=True, share=shared.args.share, server_port=shared.args.listen_port, inbrowser=shared.args.auto_launch, auth=auth)
 
-def main():
-    create_interface()
+create_interface()
 
-    while True:
-        time.sleep(0.5)
-        if shared.need_restart:
-            shared.need_restart = False
-            shared.gradio['interface'].close()
-            create_interface()
-
-import os, sys
-from daemonize import Daemonize
-
-if __name__ == '__main__':
-        myname=os.path.basename(sys.argv[0])
-        pidfile='/tmp/%s' % myname       # any name
-        daemon = Daemonize(app=myname,pid=pidfile, action=main)
-        daemon.start()
+while True:
+    time.sleep(0.5)
+    if shared.need_restart:
+        shared.need_restart = False
+        shared.gradio['interface'].close()
+        create_interface()
