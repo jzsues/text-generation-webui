@@ -9,10 +9,6 @@ requests
 rwkv==0.7.1
 safetensors==0.3.0
 sentencepiece
-<<<<<<< HEAD
-git+https://github.com/zphang/transformers@llama_push
-=======
 tqdm
 datasets
 git+https://github.com/huggingface/transformers
->>>>>>> 131753fcf5e3c3b22a8e2e0ac67fb44c3e1dfd4e
