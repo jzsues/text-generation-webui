@@ -5,6 +5,7 @@ import numpy as np
 from tokenizers import Tokenizer
 
 import modules.shared as shared
+from modules.callbacks import Iteratorize
 
 np.set_printoptions(precision=4, suppress=True, linewidth=200)
 
@@ -24,26 +25,34 @@ class RWKVModel:
         tokenizer_path = Path(f"{path.parent}/20B_tokenizer.json")
 
         if shared.args.rwkv_strategy is None:
-            model = RWKV(model=os.path.abspath(path), strategy=f'{device} {dtype}')
+            model = RWKV(model=str(path), strategy=f'{device} {dtype}')
         else:
-            model = RWKV(model=os.path.abspath(path), strategy=shared.args.rwkv_strategy)
-        pipeline = PIPELINE(model, os.path.abspath(tokenizer_path))
+            model = RWKV(model=str(path), strategy=shared.args.rwkv_strategy)
+        pipeline = PIPELINE(model, str(tokenizer_path))
 
         result = self()
         result.pipeline = pipeline
         return result
 
-    def generate(self, context, token_count=20, temperature=1, top_p=1, alpha_frequency=0.1, alpha_presence=0.1, token_ban=[0], token_stop=[], callback=None):
+    def generate(self, context="", token_count=20, temperature=1, top_p=1, top_k=50, alpha_frequency=0.1, alpha_presence=0.1, token_ban=[0], token_stop=[], callback=None):
         args = PIPELINE_ARGS(
             temperature = temperature,
             top_p = top_p,
+            top_k = top_k,
             alpha_frequency = alpha_frequency, # Frequency Penalty (as in GPT-3)
             alpha_presence = alpha_presence, # Presence Penalty (as in GPT-3)
             token_ban = token_ban, # ban the generation of some tokens
             token_stop = token_stop
         )
 
-        return context+self.pipeline.generate(context, token_count=token_count, args=args, callback=callback)
+        return self.pipeline.generate(context, token_count=token_count, args=args, callback=callback)
+
+    def generate_with_streaming(self, **kwargs):
+        with Iteratorize(self.generate, kwargs, callback=None) as generator:
+            reply = ''
+            for token in generator:
+                reply += token
+                yield reply
 
 class RWKVTokenizer:
     def __init__(self):
@@ -52,7 +61,7 @@ class RWKVTokenizer:
     @classmethod
     def from_pretrained(self, path):
         tokenizer_path = path / "20B_tokenizer.json"
-        tokenizer = Tokenizer.from_file(os.path.abspath(tokenizer_path))
+        tokenizer = Tokenizer.from_file(str(tokenizer_path))
 
         result = self()
         result.tokenizer = tokenizer

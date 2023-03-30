@@ -1,9 +1,18 @@
-accelerate==0.16.0
-bitsandbytes==0.37.0
+accelerate==0.18.0
+bitsandbytes==0.37.2
 flexgen==0.1.7
-gradio==3.18.0
+gradio==3.23.0
+markdown
 numpy
-rwkv==0.0.8
-safetensors==0.2.8
+peft==0.2.0
+requests
+rwkv==0.7.1
+safetensors==0.3.0
 sentencepiece
+<<<<<<< HEAD
 git+https://github.com/zphang/transformers@llama_push
+=======
+tqdm
+datasets
+git+https://github.com/huggingface/transformers
+>>>>>>> 131753fcf5e3c3b22a8e2e0ac67fb44c3e1dfd4e

@@ -24,6 +24,7 @@ params = {
     'top_p': 0.9,
     'typical_p': 1,
     'repetition_penalty': 1.05,
+    'encoder_repetition_penalty': 1.0,
     'top_k': 0,
     'min_length': 0,
     'no_repeat_ngram_size': 0,
@@ -31,6 +32,7 @@ params = {
     'penalty_alpha': 0,
     'length_penalty': 1,
     'early_stopping': False,
+    'seed': -1,
 }
 
 # Input prompt
@@ -45,6 +47,7 @@ response = requests.post(f"http://{server}:7860/run/textgen", json={
         params['top_p'],
         params['typical_p'],
         params['repetition_penalty'],
+        params['encoder_repetition_penalty'],
         params['top_k'],
         params['min_length'],
         params['no_repeat_ngram_size'],
@@ -52,6 +55,7 @@ response = requests.post(f"http://{server}:7860/run/textgen", json={
         params['penalty_alpha'],
         params['length_penalty'],
         params['early_stopping'],
+        params['seed'],
     ]
 }).json()
 
