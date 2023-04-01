@@ -33,7 +33,7 @@ def _load_quant(model, checkpoint, wbits, groupsize=-1, exclude_layers=['lm_head
     for name in exclude_layers:
         if name in layers:
             del layers[name]
-    make_quant(model, layers, wbits, groupsize, faster=faster_kernel, kernel_switch_threshold=kernel_switch_threshold)
+    make_quant(model, layers, wbits, groupsize, kernel_switch_threshold=kernel_switch_threshold)
 
     del layers
     
