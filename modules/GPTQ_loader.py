@@ -15,7 +15,7 @@ from modelutils import find_layers
 from quant import make_quant
 
 
-def _load_quant(model, checkpoint, wbits, groupsize=-1,faster=False, exclude_layers=['lm_head'], kernel_switch_threshold=128):
+def _load_quant(model, checkpoint, wbits, groupsize=-1, faster_kernel=False, exclude_layers=['lm_head'], kernel_switch_threshold=128):
     config = AutoConfig.from_pretrained(model)
     def noop(*args, **kwargs):
         pass
@@ -33,7 +33,7 @@ def _load_quant(model, checkpoint, wbits, groupsize=-1,faster=False, exclude_lay
     for name in exclude_layers:
         if name in layers:
             del layers[name]
-    make_quant(model, layers, wbits, groupsize, kernel_switch_threshold=kernel_switch_threshold)
+    make_quant(model, layers, wbits, groupsize, faster=faster_kernel, kernel_switch_threshold=kernel_switch_threshold)
 
     del layers
     
